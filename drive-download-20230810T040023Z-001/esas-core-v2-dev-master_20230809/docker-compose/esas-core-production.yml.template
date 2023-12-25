@@ -1,0 +1,41 @@
+version: '3'
+
+services:
+  # engine:
+  #   user: '20111:20111' # Runaway...
+  redis:
+    user: '20111:20111'
+  init:
+    image: esas-core:BRANCH
+    volumes:
+      - serversocket:/usr/local/tmp
+    command: chown 20111:20111 -R /usr/local/tmp
+  esascore:
+    image: esas-core:BRANCH
+    container_name: esas-core-server
+    volumes:
+      - serversocket:/usr/local/tmp
+      - /opt/esas/esas-core-v2/esas:/usr/local/esas
+    depends_on:
+      - nginx
+      - redis
+      - engine
+    network_mode: host
+    ulimits:
+      nofile:
+        soft: 65535
+        hard: 65535
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - 80:80
+      - 8001:80
+      - 443:443
+    volumes:
+      - /opt/esas/esas-core-v2/nginx/conf:/etc/nginx
+      - /opt/esas/esas-core-v2/nginx/tmp:/usr/local/nginx/tmp
+      - /opt/esas/esas-core-v2/nginx/log:/usr/local/nginx/log
+      - serversocket:/usr/local/tmp
+volumes:
+  serversocket:

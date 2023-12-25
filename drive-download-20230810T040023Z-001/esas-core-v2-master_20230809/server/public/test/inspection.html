@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="/config.js"></script>
+    <script src="/publish/esas.js"></script>
+    <script src="/publish/jquery-3.6.3.min.js"></script>
+    <link href="/publish/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <script src="/publish/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <style><!--
+:root {
+    --colorPrimaryNormal: #00b3bb;
+    --colorPrimaryDark: #00979f;
+    --colorPrimaryGlare: #00cdd7;
+    --colorPrimaryHalf: #80d9dd;
+    --colorPrimaryQuarter: #bfecee;
+    --colorPrimaryEighth: #dff5f7;
+    --colorPrimaryPale: #f3f5f7;
+    --colorPrimarySeparator: #f3f5f7;
+    --colorPrimaryOutline: #dff5f7;
+    --colorButtonNormal: #00b3bb;
+    --colorButtonHover: #00cdd7;
+    --colorLinkNormal: #00979f;
+    --colorLinkHover: #00cdd7;
+}
+
+body {
+    margin: 24px;
+}
+    --></style>
+    <script><!--
+      function inspect() {
+        return new Promise((resolve) => {
+          const tbody = $('#statistics tbody');
+          tbody.empty();
+          $('#result').empty();
+    	    const reader = new FileReader();
+          reader.addEventListener('load', async (event) => {
+            const json = JSON.parse(event.target.result);
+            $.post(`${location.origin}/inspectStatistics`, {json: event.target.result}, (r) => {
+              console.log(r)
+              if (r == 'ok') {
+                $('#result').html(`<span class="text-info">${r}</span>`);
+                const tbody = $('#statistics tbody');
+                tbody.append(`<tr><td>Name</td><td>${json.name}</td></tr>`)
+                tbody.append(`<tr><td>Month</td><td>${json.month}</td></tr>`)
+                tbody.append(`<tr><td>File generated</td><td>${json.generated}</td></tr>`)
+                delete json.h;
+                delete json.generated;
+                delete json.name;
+                delete json.month;
+                const sorted = esas.client.util.lodash.chain(json)
+                  .toPairs()
+                  .sort((a, b) => a[0].localeCompare(b[0]))
+                  .values();
+                for (const raw of sorted) {
+                  let clazz = '';
+                  if (raw[0] == 'Success#ENGINE.analizeFile') {
+                    clazz = 'fw-bolder';
+                  } else if (raw[0] == 'Error#ENGINE.analizeFile') {
+                    clazz = 'fw-bolder';
+                  } else if (raw[0] == 'Success#ENGINE.handshake') {
+                    clazz = 'fw-bolder';
+                  } else if (raw[0] == 'Error#ENGINE.handshake') {
+                    clazz = 'fw-bolder';
+                  }
+                  tbody.append(`<tr class="${clazz}"><td>${raw[0]}</td><td>${raw[1]}</td></tr>`)
+                }
+              } else {
+                $('#result').html(`<span class="text-danger">${r}</span>`);
+              }
+            })
+          });
+          const file = document.querySelector('#statisticFile').files[0];
+          reader.readAsText(file);
+        });
+      }
+    --></script>
+  </head>
+  <body>
+    <div class="container">
+      <input id="statisticFile" name="file" type="file" />
+      <button id="inspect" class="btn btn-primary" onClick="inspect()">Inspect</button>
+    </div>
+    <h3>Result: <span id="result" style="color:red;"/></h3>
+    <table id="statistics" class="table" >
+      <tbody>
+      </tbody>
+    </table>
+  </body>
+</html>
