@@ -182,10 +182,29 @@ class CallTask:
   def get_direction(self):
     return "out"
 
+  def set_audio_format(self):
+    use_default = False
+    if self.params["wavformat"] == 6:
+      fmt_code = "alaw"
+    elif self.params["wavformat"] == 7:
+      fmt_code = "mulaw" 
+    elif self.params["wavformat"] == 1 and self.params["bits"] == 8:
+      fmt_code = "pcml8b"
+    else:
+      fmt_code = ""
+      use_default = True
+
+    if use_default:
+      sample_rate = str(self.params["samplerate"]).replace("000", "k") + "Hz"
+    else:
+      sample_rate = str(self.params["samplerate"]).replace("000", "k")
+
+    return fmt_code + sample_rate
+
   def prepare(self):
     self.callid1 = self.make_callid()
     self.call_time = self.make_calltime()
-    self.file_fq = X_RTP_FEQ
+    self.file_fq = self.set_audio_format() #X_RTP_FEQ
     self.file_chn = self.params["channels"]
     self.call_id = self.params["call_id"]
     try:

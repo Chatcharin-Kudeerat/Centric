@@ -1,5 +1,6 @@
 import websocket
 import threading
+import PyWave
 import pyaudio
 from pydub import AudioSegment
 from pydub.utils import make_chunks
@@ -11,7 +12,7 @@ import os
 import sys
 
 CHUNK = 1280
-AUDIOFORMAT = "lsb8k"
+# AUDIOFORMAT = "lsb8k"
 REQUEST_PARAM = {
     "voiceid": "12345678901234567890@es-jpn.jp",
     "direction": "in",
@@ -39,11 +40,14 @@ REQUEST_PARAM = {
 
 
 # convert audio file to format of wav file and rate equal 8000 (~lsb8k)
-def ConvertAudioFile(fromFile, toFile):
-    command = "ffmpeg -i {} -acodec pcm_s16le -ar 11025 -ac 1 -vn {}".format(
-        fromFile, toFile)
+# [18122023] New update : convert audio file to 1 channels
+def ConvertAudioFile(fromFile, toFile, codecs):
+    # command = "ffmpeg -i {} -acodec pcm_s16le -ar 8000 -ac 1 -vn {}".format(
+    #     fromFile, toFile)
+    # os.system(command)
+    command = "ffmpeg -i {} -acodec {} -ac 1 -vn {}".format(
+        fromFile, codecs, toFile)
     os.system(command)
-
 
 # connect to TCP Server
 def ConnectWithTCPServer(host: str, port: int):
@@ -53,11 +57,36 @@ def ConnectWithTCPServer(host: str, port: int):
     client_socket = websocket.WebSocket()
     client_socket.connect(uri)
 
+def GetAudioData(wave):
+    if wave.format == 6:
+        code = "pcm_alaw"
+    elif wave.format == 7:
+        code = "pcm_mulaw"
+    elif wave.format == 1 and wave.bits_per_sample == 8:
+        code = "pcm_u8"
+    else:
+        code = "pcm_s16le"
+    
+    return code
+
+
+def SetAudioFormat(wave):
+    if wave.format == 6:
+        format = "alaw"
+    elif wave.format == 7:
+        format = "mulaw"
+    elif wave.format == 1 and wave.bits_per_sample == 8:
+        format = "pcml8b"
+    else:
+        format = "lsb"
+    
+    sample_rate = str(wave.frequency).replace("000", "k")
+    return format + sample_rate
 
 # send s command
 def SendStartCommandToCall(file):
     global DATA_RECEIVE
-    WAVE = wave.open(file, 'rb')
+    # WAVE = wave.open(file, 'rb')
     start_time = datetime.datetime.now()
     REQUEST_PARAM["callStartTime"] = start_time.strftime("%Y-%m-%d %H:%M:%S")
     REQUEST_PARAM["operation"] = "start"
@@ -78,13 +107,14 @@ def SendData(file):
     smaller = True
     wavFile = AudioSegment.from_file(file, "wav")
     print(f"wavFile {len(wavFile)}" )
-    p = pyaudio.PyAudio()
-    WAVE = wave.open(file, 'rb')
-    stream = p.open(format=p.get_format_from_width(WAVE.getsampwidth()),
-                     channels=WAVE.getnchannels(),
-                     rate=8000,
-                     output=True)
-    chunk_lenght_ms = (80//WAVE.getnchannels())
+    WAVE = PyWave.open(file)
+    # p = pyaudio.PyAudio()
+    # WAVE = wave.open(file, 'rb')
+    # stream = p.open(format=p.get_format_from_width(WAVE.samples()),
+    #                  channels=WAVE.channels(),
+    #                  rate=8000,
+    #                  output=True)
+    chunk_lenght_ms = (80//WAVE.channels)
     chunks = make_chunks(wavFile, chunk_lenght_ms)  # Make chunks of one sec
     chunks_len = len(chunks)
     for i, chunk in enumerate(chunks):
@@ -93,8 +123,8 @@ def SendData(file):
         dataSend = raw_audio_data
         print(len(dataSend))
         client_socket.send(dataSend, opcode=0x2)
-        stream.write(raw_audio_data) # 解析と共にストリーミング再生する場合はコメントを外す。ただし処理スピードがかなり落ちる
-        time.sleep(0.005) # ストリーミング再生無しだとeコマンドの到達が速すぎて処理できなくなるためsleepを入れる eコマンド側でwaitする方法でも良い
+        # stream.write(raw_audio_data) # 解析と共にストリーミング再生する場合はコメントを外す。ただし処理スピードがかなり落ちる
+        time.sleep(0.05) # ストリーミング再生無しだとeコマンドの到達が速すぎて処理できなくなるためsleepを入れる eコマンド側でwaitする方法でも良い
 
     time.sleep(5)
     print(f"send end command... \n")
@@ -134,7 +164,6 @@ def ProcessData(file):
             print(e)
             break
 
-
 def Stop(file):
     os.remove(file)
     client_socket.close()
@@ -145,13 +174,15 @@ if __name__ == "__main__":
     # host = input("Enter host name :")
     # fileName = input("Enter file name :")
     host = '122.248.205.250' #'ec2-122-248-205-250.ap-southeast-1.compute.amazonaws.com'
-    fileName = '/Users/chatcharin/Desktop/Centric/drive-download-20230606T071251Z-001/tool_python_websocket_20230106/samples/49sec.wav'
-    # fileName = '/Users/worawut/Desktop/Centric/drive-download-20230606T071251Z-001/tool_python_websocket_20230106/pcm_file/10sec_8k_16bit.wav'
-    # fileName = '/Users/chatcharin/Desktop/Centric/drive-download-20230606T071251Z-001/tool_python_websocket_20230106/angry/20220621221729953_Demo_angry20220610_45001_0800045001_o.wav'
+    fileName = './samples/49sec.wav'
     
     now = datetime.datetime.now().strftime("%Y%m%d%H%M%S%f")
     index = sys.argv[1] if len(sys.argv) > 1 else 1
     outputFile = f"{now}-{index}.wav"
     ConnectWithTCPServer(host, 8001)
-    ConvertAudioFile(fileName, outputFile)
+
+    WAVE = PyWave.open(fileName, mode="r")
+    AUDIOFORMAT = SetAudioFormat(WAVE)
+    codec = GetAudioData(WAVE)
+    ConvertAudioFile(fileName, outputFile, codec)
     ProcessData(outputFile)
