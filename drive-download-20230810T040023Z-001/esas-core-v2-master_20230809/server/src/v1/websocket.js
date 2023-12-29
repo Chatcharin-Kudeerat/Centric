@@ -168,14 +168,46 @@ class WebsocketServer {
             const audioFormat = matches[1];
             let sampleRate = null;
             let bigendian = false;
-            if (audioFormat == 'lsb8k') {
+            let bitRate = null; // Ton // Item 2
+            // if (audioFormat == 'lsb8k') {
+            //   sampleRate = 8000;
+            // } else if (audioFormat == 'msb8k') {
+            //   sampleRate = 8000;
+            //   bigendian = true;
+            // } else if (audioFormat == 'lsb16k') {
+            //   sampleRate = 16000;
+            // } else if (audioFormat == 'msb16k') {
+            //   sampleRate = 16000;
+            //   bigendian = true;
+            // } else {
+            //   throw new WebsocketServerError(`Invalid audioFormat ${audioFormat}`);
+            // }
+            if (audioFormat == 'lsb8k') { // Ton // Item 2
+              bitRate = 16;
               sampleRate = 8000;
             } else if (audioFormat == 'msb8k') {
+              bitRate = 16;
               sampleRate = 8000;
               bigendian = true;
             } else if (audioFormat == 'lsb16k') {
+              bitRate = 16;
               sampleRate = 16000;
             } else if (audioFormat == 'msb16k') {
+              bitRate = 16;
+              sampleRate = 16000;
+              bigendian = true;
+            } else if (audioFormat == 'mulaw8k' || audioFormat == 'alaw8k' || audioFormat == 'pcml8b8k') {
+              bitRate = 8;
+              sampleRate = 8000;
+            } else if (audioFormat == 'pcmb8b8k') {
+              bitRate = 8;
+              sampleRate = 8000;
+              bigendian = true;
+            } else if (audioFormat == 'mulaw16k' || audioFormat == 'alaw16k' || audioFormat == 'pcml8b16k') {
+              bitRate = 8;
+              sampleRate = 16000;
+            } else if (audioFormat == 'pcmb8b16k') {
+              bitRate = 8;
               sampleRate = 16000;
               bigendian = true;
             } else {
@@ -191,9 +223,11 @@ class WebsocketServer {
               isPCM: true,
               channels: 1,
               backgroundNoise: config.engine.backgroundNoise,
-              bitRate: 16,
+              // bitRate: 16,
+              bitRate, // Ton // Item 2
               sampleRate,
               bigendian,
+              audioFormat: audioFormat, // Ton // Item 2
             };
             this.logger.trace(`WebsocketServer.socket.on() send s`);
             this.engineClient = new EngineClient(this.logger, this.emitter, this.handshake);

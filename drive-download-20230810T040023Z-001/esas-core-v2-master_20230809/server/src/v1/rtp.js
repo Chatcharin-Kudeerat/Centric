@@ -207,9 +207,28 @@ module.exports = (serverIndex, app, httpServer) => {
       if (req.body.operation == 'start') {
         logger.trace(`V1.callOperation() 'start'`);
         let sampleRate = null;
-        if (req.body.Fs == '8kHz') {
+        let bitRate = null; // Ton // Item 2
+        let bigendian = false; // Ton // Item 2
+        // if (req.body.Fs == '8kHz') {
+        //   sampleRate = 8000;
+        // } else if (req.body.Fs == '16kHz') {
+        //   sampleRate = 16000;
+        // }
+        if (req.body.Fs == '8kHz') { // Ton // Item 2
+          bitRate = 16;
           sampleRate = 8000;
         } else if (req.body.Fs == '16kHz') {
+          bitRate = 16;
+          sampleRate = 16000;
+        }else if (req.body.Fs == 'alaw8k' || req.body.Fs == 'mulaw8k' || req.body.Fs == 'pcml8b8k') {
+          bitRate = 8;
+          sampleRate = 8000;
+        }else if (req.body.Fs == 'mulaw16k' || req.body.Fs == 'alaw16k') {
+          bitRate = 8;
+          sampleRate = 16000;
+        }else if (req.body.Fs == 'pcml8b16k') {
+          bigendian = true;
+          bitRate = 8;
           sampleRate = 16000;
         }
         if (!sampleRate) {
@@ -228,8 +247,11 @@ module.exports = (serverIndex, app, httpServer) => {
           isPCM: true,
           channels: 1,
           backgroundNoise: config.engine.backgroundNoise,
-          bitRate: 16,
+          // bitRate: 16,
+          bitRate, // Ton // Item 2
+          bigendian, // Ton // Item 2
           sampleRate,
+          audioFormat: req.body.Fs, // Ton // Item 2
         };
         session = new V1RtpSession(handshake);
         session.init(

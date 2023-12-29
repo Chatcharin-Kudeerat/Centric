@@ -42,6 +42,7 @@ class V2SocketIoSession {
           sampleRate: context.sampleRate,
           outputType: 'json',
           bigendian: context.bigendian,
+          audioFormat: context.audioCodec, // Ton // Item 2
         };
         this.engineClient = new EngineClient(this.logger, this.emitter, this.handshake);
         await this.engineClient.start();

@@ -5,6 +5,7 @@ const io = require('socket.io-client');
 const puppeteer = require('puppeteer');
 const fs = require('fs');
 const FormData = require('form-data');
+const { spawn } = require('child_process'); // Ton // Item 7
 
 const config = require('config');
 const lib = require('lib');
@@ -36,6 +37,9 @@ class EngineClient {
     this.handshake = handshake;
     this.emitter = emitter;
     this.bytes = 0;
+    this.buffer_store = []; // Ton // Item 4, 7
+    this.current_bytes = 0; // Ton // Item 4
+    this.buffer_size = 6615; // Ton // Item 4
   }
 
   static async _login(currentPage) {
@@ -364,6 +368,7 @@ class EngineClient {
         this.logger.trace(`EngineClient.start() begin`);
         this.socket = await this._connect();
         this.bigendian = this.handshake.bigendian;
+        this.ffmpeg_c = await this._ffmpeg_child(this.handshake.audioFormat); // Ton // Item 7
         await this._handshake(
           this.handshake.isPCM,
           this.handshake.channels,
@@ -407,8 +412,9 @@ class EngineClient {
     return new Promise( async (resolve) => {
       try {
         this.logger.trace(`EngineClient.close() begin`);
-        this.logger.trace(`EngineClient.close() emit zero(0) buffer`); 
-        this.sendBuffer(Buffer.alloc(0));
+        // this.logger.trace(`EngineClient.close() emit zero(0) buffer`); 
+        // this.sendBuffer(Buffer.alloc(0));
+        await this.sendZeroBuffer(); // Ton // Item 4
         this.closing = true;
         if (this.socket) {
           if (!this.dataSent) {
@@ -433,7 +439,7 @@ class EngineClient {
             if (this.socket) {
               this.socket.disconnect();
               this.socket = null;
-              this.logger.trace(`EngineClient.socket.on analysis-report-ready end bytes: ${this.bytes}`);
+              this.logger.trace(`EngineClient.socket.on analysis-report-ready end bytes: ${this.current_bytes}`); // Ton // Item 4 update parameter
               resolve();
             }
           });
@@ -489,9 +495,127 @@ class EngineClient {
       }
       this.dataSent = true;
       this.bytes += buffer.length;
-      this.socket.emit('audio-stream', buffer);
-      Redis.countEngine(buffer.length, 'Bytes#ENGINE.send', this.handshake.channels, this.handshake.backgroundNoise, this.handshake.bitRate, this.handshake.sampleRate);
+
+      if (this.ffmpeg_c){ // Ton // Item 4, 7
+        this.ffmpeg_c.stdin.write(buffer) // Ton // Item 7
+        let current_buffer = this.calBufferSize(buffer) // Ton // Item 4
+        if (current_buffer) { // Ton // Item 4
+          this.socket.emit('audio-stream', current_buffer);
+          Redis.countEngine(current_buffer.length, 'Bytes#ENGINE.send', this.handshake.channels, this.handshake.backgroundNoise, this.handshake.bitRate, this.handshake.sampleRate);
+        }
+      }else{
+        this.current_bytes += buffer.length;
+        this.socket.emit('audio-stream', buffer);
+        Redis.countEngine(buffer.length, 'Bytes#ENGINE.send', this.handshake.channels, this.handshake.backgroundNoise, this.handshake.bitRate, this.handshake.sampleRate);
+      }
+
+      // this.socket.emit('audio-stream', buffer);
+      // Redis.countEngine(buffer.length, 'Bytes#ENGINE.send', this.handshake.channels, this.handshake.backgroundNoise, this.handshake.bitRate, this.handshake.sampleRate);
     }
+  }
+
+  // Ton // Item 4
+  sendZeroBuffer(){
+    return new Promise( (resolve)=>{
+      if (this.ffmpeg_c){ // send remain buffer
+        this.ffmpeg_c.stdin.end();
+        let tmp_buffer = Buffer.from(this.buffer_store)
+        const time = Math.ceil((this.buffer_store.length - this.current_bytes)/this.buffer_size);
+        for (let i = 0; i < time; i++) { 
+          let buff = tmp_buffer.subarray(this.current_bytes, (this.current_bytes+this.buffer_size))
+          this.current_bytes += buff.length
+          this.socket.emit('audio-stream', buff);
+          Redis.countEngine(buff.length, 'Bytes#ENGINE.send', this.handshake.channels, this.handshake.backgroundNoise, this.handshake.bitRate, this.handshake.sampleRate);
+        }
+      }
+      this.logger.trace(`EngineClient.close() emit zero(0) buffer`);
+      this.socket.emit('audio-stream', Buffer.alloc(0));
+      Redis.countEngine(Buffer.alloc(0).length, 'Bytes#ENGINE.send', this.handshake.channels, this.handshake.backgroundNoise, this.handshake.bitRate, this.handshake.sampleRate);
+      resolve();
+    });
+  }
+
+  // Ton // Item 4
+  calBufferSize(buffer){
+    let tmp_buffer = Buffer.from(this.buffer_store)
+    let buff = tmp_buffer.subarray(this.current_bytes, (this.current_bytes+this.buffer_size))
+    if ((tmp_buffer.length - this.current_bytes) > this.buffer_size ){
+      this.logger.trace(`EngineClient send data : ${buff.length}`);
+      this.current_bytes += buff.length
+      return buff
+    }else{
+      return 0
+    }
+  }
+
+  // Ton // Item 7
+  ffmpeg_arg(audioFormat){
+    const br = this.handshake.bitRate
+    const ch = this.handshake.channels
+    const sr = this.handshake.sampleRate
+    const b_ed = this.handshake.bigendian
+    let arg = []
+    if (['lsb8k', 'lsb16k', '8kHz', '16kHz'].includes(audioFormat)){
+      arg.push('-f', 's16le')
+    } else if (['msb8k', 'msb16k'].includes(audioFormat)){
+      arg.push('-f', 's16be')
+    } else if (['mlaw', 'mulaw8k', 'mulaw16k'].includes(audioFormat)){
+      arg.push('-f', 'mulaw')
+    } else if (['alaw', 'alaw8k', 'alaw16k'].includes(audioFormat)){
+      arg.push('-f', 'alaw')
+    } else if (['pcml8b8k', 'pcml8b16k', 'pcmb8b8k', 'pcmb8b16k'].includes(audioFormat)){
+      arg.push('-f', 'u8')
+    } else {
+      if (br == 8 ){
+        arg.push('-f', 'u8')
+      }else {
+        if (b_ed){
+          arg.push('-f', 's16be')
+        }else {
+          arg.push('-f', 's16le')
+        }
+      }
+    }
+    if (sr) { arg.push('-ar', `${sr}` ) }
+    if (ch) { arg.push('-ac', `${ch}` ) }
+    arg.push('-i', 'pipe:0', '-ar', '11025', '-ac', '1', '-f', 's16le', 'pipe:1')
+    this.logger.trace(`ffmpeg arguments : ${arg}`);
+    return arg
+  }
+
+  // Ton // Item 7
+  _ffmpeg_child(audioFormat) {
+    return new Promise((resolve, reject) => {
+      const arg = this.ffmpeg_arg(audioFormat);
+      const child = spawn('ffmpeg', arg);
+
+      child.stdout.on('data', (data) => {
+        // this.logger.trace(`ffmpeg converted data size : ${data.length}`);
+        this.buffer_store.push(...data);
+      });
+      child.stderr.on('data', (data) => {
+        // this.logger.trace(`ffmpeg : ${data.toString()}`);
+      });
+      child.on('close', (code) => {
+        if (code === 0) {
+            this.logger.trace(`ffmpeg close`);
+        } else {
+            // this.logger.error(`ffmpeg encountered an error, check the console output`);
+        }
+      });
+      child.on('spawn', () => {
+        this.handshake.channels = 1;
+        this.handshake.bitRate = 16;
+        this.handshake.sampleRate = 11025;
+        this.logger.trace(`ffmpeg spawn success`);
+        resolve(child);
+      });
+      child.on('error', (e) => {
+        this.logger.error(`ffmpeg spawn error: ${e}`);
+        resolve(0);
+        //reject(e);
+      });
+    });
   }
 
   _connect() {
