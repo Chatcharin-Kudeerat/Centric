@@ -1,66 +1,90 @@
 # run
-node clientjs/publish/client_exampleV2.js
+node client.js {filename}
 
 # logging example
 === Wav file context data ===
-channels: 1
-bitRate: 16
+filename: 20sec.wav
+channels: 2
+bitRate: 8
 sampleRate: 8000
 bigendian: false
+audioCodec: alaw
 =============================
-send package : 1/125
-send package : 2/125
-send package : 3/125
-send package : 4/125
-send package : 5/125
-send package : 6/125
-send package : 7/125
+send package : 1/253
+send package : 2/253
+send package : 3/253
+send package : 4/253
+send package : 5/253
+send package : 6/253
+send package : 7/253
+send package : 8/253
+send package : 9/253
+send package : 10/253
+send package : 11/253
+send package : 12/253
+send package : 13/253
+send package : 14/253
+send package : 15/253
+send package : 16/253
+send package : 17/253
+send package : 18/253
+send package : 19/253
+send package : 20/253
+send package : 21/253
+send package : 22/253
+send package : 23/253
+send package : 24/253
+send package : 25/253
+send package : 26/253
+send package : 27/253
+send package : 28/253
+send package : 29/253
 {
   Param: [
     {
       Segment: 1,
       Channel: 0,
-      StartPosSec: 0.02,
-      EndPosSec: 0.46,
-      Energy: 4,
-      Stress: 10,
-      Concentration: 60,
-      Anticipation: 100,
-      Excitement: 30,
-      Hesitation: 17,
-      Uncertainty: 15,
+      StartPosSec: 0.3,
+      EndPosSec: 0.68,
+      Energy: 40,
+      Stress: 0,
+      Concentration: 0,
+      Anticipation: 0,
+      Excitement: 28,
+      Hesitation: 12,
+      Uncertainty: 8,
       IntensiveThinking: 0,
       ImaginationActivity: 0,
       Embarrassment: 0,
       Passionate: 0,
-      BrainPower: 42,
-      Confidence: 15,
-      Aggression: 0,
+      BrainPower: 58,
+      Confidence: 22,
+      Aggression: 12,
       AgentScore: 0,
       CallPriority: 0,
-      Atmosphere: -1,
+      Atmosphere: 13,
       Upset: 0,
       Content: 0,
       Dissatisfaction: 0,
-      ExtremeEmotion: 4,
-      'EMO/COG': 75,
-      SOS: 91,
-      AVJ: 386,
-      Fant: 75,
-      Fflic: 1,
-      Fmain: 38,
-      JQ: 16,
-      LJ: 0,
-      SPJ: 312,
-      SPT: 525,
-      intCHL: 182
+      ExtremeEmotion: 14,
+      'EMO/COG': 323,
+      SOS: 67,
+      AVJ: 289,
+      Fant: 3,
+      Fflic: 5,
+      Fmain: 15,
+      JQ: 4,
+      LJ: 1,
+      SPJ: 55,
+      SPT: 1110,
+      intCHL: 2012,
+      CoreType: 'EN-EM'
     }
   ]
 }
-send package : 8/125
-send package : 9/125
-send package : 10/125
-send package : 11/125
-send package : 12/125
-send package : 13/125
+send package : 30/253
+send package : 31/253
+send package : 32/253
+send package : 33/253
+send package : 34/253
 ...
