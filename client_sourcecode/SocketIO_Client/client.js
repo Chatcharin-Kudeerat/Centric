@@ -4,8 +4,6 @@ const src = require('./lib/index.js');
 const os = require('os');
 const _ = src.util["lodash"]
 const fs = require('fs');
-const { callbackify } = require('util');
-const { parseInt } = require('lodash');
 const config = {"url": "ws://ec2-122-248-205-250.ap-southeast-1.compute.amazonaws.com"} // sever url //
 const esasClientV2 = new src.v2(config); // EsasClientV2 //
 
