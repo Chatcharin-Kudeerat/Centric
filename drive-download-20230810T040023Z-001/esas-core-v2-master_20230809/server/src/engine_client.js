@@ -607,6 +607,8 @@ class EngineClient {
         this.handshake.channels = 1;
         this.handshake.bitRate = 16;
         this.handshake.sampleRate = 11025;
+        let size = (this.handshake.sampleRate * this.handshake.bitRate * 0.3) / 8
+        this.buffer_size = size * this.handshake.channels
         this.logger.trace(`ffmpeg spawn success`);
         resolve(child);
       });
