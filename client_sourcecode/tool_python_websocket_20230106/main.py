@@ -12,7 +12,7 @@ import os
 import sys
 
 CHUNK = 1280
-# AUDIOFORMAT = "lsb8k"
+AUDIOFORMAT = "lsb8k"
 REQUEST_PARAM = {
     "voiceid": "12345678901234567890@es-jpn.jp",
     "direction": "in",
@@ -57,30 +57,31 @@ def ConnectWithTCPServer(host: str, port: int):
     client_socket = websocket.WebSocket()
     client_socket.connect(uri)
 
-def GetAudioData(wave):
-    if wave.format == 6:
+def GetAudioData(wav):
+    print(wav.bitrate)
+    if wav.format == 6:
         code = "pcm_alaw"
-    elif wave.format == 7:
+    elif wav.format == 7:
         code = "pcm_mulaw"
-    elif wave.format == 1 and wave.bits_per_sample == 8:
+    elif wav.format == 1 and wav.bits_per_sample == 8:
         code = "pcm_u8"
     else:
-        code = "pcm_s16le"
+        code = "pcm_s16" + sys.byteorder[0] + "e"
     
     return code
 
 
-def SetAudioFormat(wave):
-    if wave.format == 6:
+def SetAudioFormat(wav):
+    if wav.format == 6:
         format = "alaw"
-    elif wave.format == 7:
+    elif wav.format == 7:
         format = "mulaw"
-    elif wave.format == 1 and wave.bits_per_sample == 8:
-        format = "pcml8b"
+    elif wav.format == 1 and wav.bits_per_sample == 8:
+        format = "pcm" + sys.byteorder[0] + "8b"
     else:
-        format = "lsb"
+        format = sys.byteorder[0] + "sb"
     
-    sample_rate = str(wave.frequency).replace("000", "k")
+    sample_rate = str(wav.frequency).replace("000", "k")
     return format + sample_rate
 
 # send s command
@@ -142,6 +143,7 @@ def ProcessData(file):
         send_data = threading.Thread(target=SendData, args=(file,))
         send_data.start()
     else:
+        print("else")
         Stop(file)
     data = b""
     while True:
@@ -169,20 +171,22 @@ def Stop(file):
     client_socket.close()
     os._exit(1)
 
-
-if __name__ == "__main__":
-    # host = input("Enter host name :")
-    # fileName = input("Enter file name :")
+def run():
+    global AUDIOFORMAT 
     host = '122.248.205.250' #'ec2-122-248-205-250.ap-southeast-1.compute.amazonaws.com'
-    fileName = './samples/49sec.wav'
+    fileName = './samples/10sec_1ch_16000khz_16bit.wav'
     
     now = datetime.datetime.now().strftime("%Y%m%d%H%M%S%f")
     index = sys.argv[1] if len(sys.argv) > 1 else 1
     outputFile = f"{now}-{index}.wav"
-    ConnectWithTCPServer(host, 8001)
 
-    WAVE = PyWave.open(fileName, mode="r")
+    ConnectWithTCPServer(host, 8001)
+    WAVE = PyWave.open(fileName, mode="r", auto_read = True)
     AUDIOFORMAT = SetAudioFormat(WAVE)
     codec = GetAudioData(WAVE)
     ConvertAudioFile(fileName, outputFile, codec)
     ProcessData(outputFile)
+
+
+if __name__ == "__main__":
+    run()

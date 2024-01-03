@@ -201,6 +201,9 @@ exports.calAvgCoretype = (obj_coretype, channel) => {
   channel = !_.isString(channel) ? channel.toString() : channel;
   let ec1 = 0;
   let eb1 = 0;
+  if (_.isUndefined(obj_coretype)){
+    return null;
+  }
   for (const avg of obj_coretype[channel]){
     ec1 += avg[0];
     eb1 += avg[1];

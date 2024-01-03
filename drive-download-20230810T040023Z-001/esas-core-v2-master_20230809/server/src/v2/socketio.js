@@ -87,7 +87,7 @@ class V2SocketIoSession {
                     channel: i,
                   }, {
                     Segment: null,
-                    CoreType: lib.logic.calAvgCoretype(this.avg_coretype, i.toString()),
+                    CoreType: lib.logic.calAvgCoretype(this.avg_coretype, i),
                   });
                   return esasParam;
                 }else{

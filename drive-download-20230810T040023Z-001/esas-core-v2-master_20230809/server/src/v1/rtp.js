@@ -49,7 +49,7 @@ class V1RtpSession {
                   channel: rtpServer.channel,
                 }, {
                   Segment: null,
-                  CoreType: lib.logic.calAvgCoretype(this.avg_coretype, rtpServer.channel.toString()),
+                  CoreType: lib.logic.calAvgCoretype(this.avg_coretype, rtpServer.channel),
                 });
                 return esasParam;
               } else{
