@@ -1,3 +1,6 @@
+###### install pakage ######
+  command: npm install
+  
 ###### run SocketIO client #######
   command: node client.js {filename}
   ex: node client.js 39sec.wav

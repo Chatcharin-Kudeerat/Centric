@@ -1,5 +1,16 @@
-# run
-node client.js {filename}
+# install
+  command: npm install
+
+# run client test
+  command: node client.js {filename}
+  ex: node client.js 20sec.wav
+  meaning: run socketio client with file '20sec.wav'
+  note. {filename} will call file in /samples directory
+
+# run thread client test
+  command: node client_thread.js {number_of_thread}
+  ex: node client_thread.js 150
+  meaning: run socketio client with 150 thread
 
 # logging example
 === Wav file context data ===
