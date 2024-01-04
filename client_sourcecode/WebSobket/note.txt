@@ -5,6 +5,8 @@ pip install -r requirements.txt
 # run 
 python3.8 main.py
 python3.8 concurrent_test.py 10 -> for concurrent test, {10} is number of concurrent 
+ืnote: If your python version is not 3.8 please edit concurrent_test.py line 12
+     subprocess.run(["pythonXX", "./main.py"])
 
 # logging example
 256000
