@@ -26,7 +26,7 @@ class V2SocketIoSession {
     this.emitter = new EventEmitter();
     this.socket = socket;
     this.segmentIndex = 1;
-    this.avg_coretype = {};
+    this.avg_coretype = {}; // 20231218_AmiVoice_add_new_parameter_coretype
   }
 
   init() {
@@ -76,11 +76,13 @@ class V2SocketIoSession {
       }
     });
 
+    // 20231218_AmiVoice_add_new_parameter_coretype_add_argrument_lastSegments
     this.emitter.on('analyzed', (engineParams, lastSegments = false) => {
       try{ 
         const esasParams = _.chain(engineParams)
               .map((engineParam, i) => {
                 this.logger.debug(`Engine param`, JSON.stringify(engineParam));
+                // 20231218_AmiVoice_add_new_parameter_coretype_add_if_else
                 if (lastSegments){
                   const esasParam = lib.logic.buildEsasParam({
                     index: this.segmentIndex,
@@ -104,11 +106,14 @@ class V2SocketIoSession {
                   }
                   this.logger.trace(`Esas param`, JSON.stringify(esasParam));
                   this.segmentIndex++;
+
+                  // 20231218_AmiVoice_add_new_parameter_coretype_add_store_coretype
                   const s_channel = engineParam.channel.toString();
                   if (_.isUndefined(this.avg_coretype[s_channel])){
                     this.avg_coretype[s_channel] = []
                   }
-                  this.avg_coretype[s_channel].push(lib.logic.get_coretype_value(engineParam));
+                  this.avg_coretype[s_channel].push(lib.logic.getCoretypeValue(engineParam));
+
                   return esasParam;
                 }
               })

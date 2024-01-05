@@ -24,7 +24,7 @@ class V1RtpSession {
     this.id = nodeUuid.v4().split('-').join('');
     this.logger = Logger(`[${V1RtpSession.ServerIndex}] [${this.id}]`);
     this.data = data;
-    this.avg_coretype = {};
+    this.avg_coretype = {}; // 20231218_AmiVoice_add_new_parameter_coretype
   }
 
   init(rtpServers) {
@@ -38,11 +38,13 @@ class V1RtpSession {
 
   _init(rtpServer) {
     rtpServer.segmentIndex = 0;
+    // 20231218_AmiVoice_add_new_parameter_coretype_add_argrument_lastSegments
     rtpServer.emitter.on('analyzed', (engineParams, lastSegments = false) => {
       try {
       const esasParams = _.chain(engineParams)
             .map((engineParam) => {
               this.logger.debug(`Engine param`, JSON.stringify(engineParam));
+              // 20231218_AmiVoice_add_new_parameter_coretype_add_if_else
               if (lastSegments){
                 const esasParam = lib.logic.buildEsasParam({
                   index: ++rtpServer.segmentIndex,
@@ -65,11 +67,14 @@ class V1RtpSession {
                   return null;
                 }
                 this.logger.trace(`Esas param`, JSON.stringify(esasParam));
+
+                // 20231218_AmiVoice_add_new_parameter_coretype_add_store_coretype
                 const s_channel = rtpServer.channel.toString();
                 if (_.isUndefined(this.avg_coretype[s_channel])){
                   this.avg_coretype[s_channel] = []
                 }
-                this.avg_coretype[s_channel].push(lib.logic.get_coretype_value(engineParam));
+                this.avg_coretype[s_channel].push(lib.logic.getCoretypeValue(engineParam));
+                
                 return esasParam;
               }
             })

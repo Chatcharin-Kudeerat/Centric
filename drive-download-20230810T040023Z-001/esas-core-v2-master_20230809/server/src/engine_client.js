@@ -282,10 +282,10 @@ class EngineClient {
           bg_noise = config.engine.backgroundNoise;
         }
         form.append('backgroundNoise', bg_noise);
-        form.append('dummyResponse', true);
+        form.append('dummyResponse', true); // 20231218_AmiVoice_additional_dummyResponse_functionality
         form.submit(`${ADMIN_URL}/analysis/analyzeFile`, (err, res) => {
           const buffers = [];
-          const avg_coretype = {};
+          const avg_coretype = {}; // 20231218_AmiVoice_add_new_parameter_coretype
           if (err) {
             Redis.countError('ENGINE.analizeFile');
             logger.error(`EngineClient.analyzeFile() error`, err);
@@ -312,11 +312,13 @@ class EngineClient {
                   Segment: engineParam.index,
                   'report.MEE': null,
                 }));
+
+                // 20231218_AmiVoice_add_new_parameter_coretype_add_store_coretype
                 const s_channel = engineParam.channel.toString()
                 if (_.isUndefined(avg_coretype[s_channel])){
                   avg_coretype[s_channel] = []
                 }
-                avg_coretype[s_channel].push(lib.logic.get_coretype_value(engineParam));
+                avg_coretype[s_channel].push(lib.logic.getCoretypeValue(engineParam));
               }
 
               for (const channel in data.data.reports) {
@@ -327,7 +329,7 @@ class EngineClient {
                   'report.MEE': mentalEffortEfficiency,
                 }, {
                   Segment: null,
-                  CoreType: lib.logic.calAvgCoretype(avg_coretype, channel.slice('channel-'.length)),
+                  CoreType: lib.logic.calAvgCoretype(avg_coretype, channel.slice('channel-'.length)), // 20231218_AmiVoice_add_new_parameter_coretype
                 }));
               }
               resolve(segments);

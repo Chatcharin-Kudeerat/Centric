@@ -25,7 +25,7 @@ class V1WebsocketSession {
     this.logger = Logger(`[${V1WebsocketSession.ServerIndex}] [${this.id}]`);
     this.data = data;
     this.segmentIndex = 0;
-    this.avg_coretype = {};
+    this.avg_coretype = {}; // 20231218_AmiVoice_add_new_parameter_coretype
   }
 
   init(websocketServer) {
@@ -35,10 +35,12 @@ class V1WebsocketSession {
       this.callID1 = context.callID1;
       this.agentID = context.agentID;
     });
+    // 20231218_AmiVoice_add_new_parameter_coretype_add_argrument_lastSegments
     this.websocketServer.emitter.on('analyzed', (engineParams, lastSegments = false) => {
       const esasParams = _.chain(engineParams)
             .map((engineParam, i) => {
               this.logger.debug(`Engine param`, JSON.stringify(engineParam));
+              // 20231218_AmiVoice_add_new_parameter_coretype_add_if_else
               if (lastSegments){
                 const esasParam = lib.logic.buildEsasParam({
                   index: ++this.segmentIndex,
@@ -58,11 +60,14 @@ class V1WebsocketSession {
                   return null;
                 }
                 this.logger.trace(`Esas param`, JSON.stringify(esasParam));
+
+                // 20231218_AmiVoice_add_new_parameter_coretype_add_store_coretype
                 const s_channel = engineParam.channel.toString();
                 if (_.isUndefined(this.avg_coretype[s_channel])){
                   this.avg_coretype[s_channel] = []
                 }
-                this.avg_coretype[s_channel].push(lib.logic.get_coretype_value(engineParam));
+                this.avg_coretype[s_channel].push(lib.logic.getCoretypeValue(engineParam));
+
                 return esasParam;
               }
             })

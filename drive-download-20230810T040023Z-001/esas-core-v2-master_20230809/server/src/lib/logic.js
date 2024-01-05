@@ -101,6 +101,7 @@ const mee = (v) => {
   return parseInt(`${maxmin(parseInt(str[0]), 7, 1)}${maxmin(parseInt(str[1]), 8, 1)}`);
 };
 
+// 20231218_AmiVoice_add_new_parameter_coretype_add_const_coretype
 const coretype = (ec, eb) => {
   if (!_.isNumber(ec)) {
     return null;
@@ -114,6 +115,7 @@ const coretype = (ec, eb) => {
   return `${ec_range}-${eb_range}`;
 }
 
+// 20231218_AmiVoice_add_new_parameter_coretype_add_const_calec
 const calec = (JQ, Fflic, AVJ, intCHL, LJ, Fmain) => {
   if (!_.isNumber(JQ)) {
     return null;
@@ -165,7 +167,7 @@ const _buildEsasParam = (engineParam) => {
     Dissatisfaction: round(maxmin(engineParam.dissatisfied, 30, 0)),
     ExtremeEmotion: round(maxmin(engineParam.extremeEmotion, 30, 0)),
     'report.MEE': mee(engineParam['report.MEE']),
-    CoreType: coretype(calec(engineParam.JQ, engineParam.Fflic, engineParam.AVJ, engineParam.intCHL, engineParam.LJ, engineParam.Fmain), engineParam.emotionCognitiveRatio)
+    CoreType: coretype(calec(engineParam.JQ, engineParam.Fflic, engineParam.AVJ, engineParam.intCHL, engineParam.LJ, engineParam.Fmain), engineParam.emotionCognitiveRatio) // 20231218_AmiVoice_add_new_parameter_coretype
   };
   for (const field of ENGINE_PARAM_FIELDS) {
     if (!_.isUndefined(engineParam[field])) {
@@ -191,12 +193,14 @@ exports.buildEsasParam = (engineParam, overwritePram = {}) => {
   }
 };
 
-exports.get_coretype_value = (engineParam) => {
+// 20231218_AmiVoice_add_new_parameter_coretype_add_function_getCoretypeValue
+exports.getCoretypeValue = (engineParam) => {
   const ec1 = calec(engineParam.JQ, engineParam.Fflic, engineParam.AVJ, engineParam.intCHL, engineParam.LJ, engineParam.Fmain);
   const eb1 = engineParam.emotionCognitiveRatio;
   return [ec1, eb1];
 }
 
+// 20231218_AmiVoice_add_new_parameter_coretype_add_function_calAvgCoretype
 exports.calAvgCoretype = (obj_coretype, channel) => {
   channel = !_.isString(channel) ? channel.toString() : channel;
   let ec1 = 0;
