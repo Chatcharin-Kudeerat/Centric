@@ -282,7 +282,7 @@ class EngineClient {
           bg_noise = config.engine.backgroundNoise;
         }
         form.append('backgroundNoise', bg_noise);
-        form.append('dummyResponse', true); // 20231218_AmiVoice_additional_dummyResponse_functionality
+        // form.append('dummyResponse', true); // 20231218_AmiVoice_additional_dummyResponse_functionality
         form.submit(`${ADMIN_URL}/analysis/analyzeFile`, (err, res) => {
           const buffers = [];
           const avg_coretype = {}; // 20231218_AmiVoice_add_new_parameter_coretype
