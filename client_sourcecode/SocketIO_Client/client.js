@@ -19,18 +19,22 @@ let socketSession = esasClientV2.startSocketIoSession()
 start_process()
 
 async function start_process(){
-  print_info(context)
-  let chunks = make_chunk(wav.toBuffer())
-  await socketSession.init(context)
-  let i = 1
-  for (const chunk of chunks) {
-    await delay(delayTime)
-    console.log(`send package : ${i}/${chunks.length}`)
-    socketSession.send(chunk)
-    i++
+  try{
+    print_info(context)
+    let chunks = make_chunk(wav.toBuffer())
+    await socketSession.init(context)
+    let i = 1
+    for (const chunk of chunks) {
+      await delay(delayTime)
+      console.log(`send package : ${i}/${chunks.length}`)
+      socketSession.send(chunk)
+      i++
+    }
+    console.log("send term event");
+    await socketSession.term()
+  }catch (e){
+    console.log(e)
   }
-  console.log("send term event");
-  await socketSession.term()
 }
 
 socketSession.socket.on("analyzed", (data) => {
