@@ -207,14 +207,15 @@ module.exports = (serverIndex, app, httpServer) => {
       if (req.body.operation == 'start') {
         logger.trace(`V1.callOperation() 'start'`);
         let sampleRate = null;
-        let bitRate = null; // Ton // Item 2
-        let bigendian = false; // Ton // Item 2
+        // 20231218_AmiVoice_add_parameter
+        let bitRate = null;
+        let bigendian = false;
         // if (req.body.Fs == '8kHz') {
         //   sampleRate = 8000;
         // } else if (req.body.Fs == '16kHz') {
         //   sampleRate = 16000;
         // }
-        if (req.body.Fs == '8kHz') { // Ton // Item 2
+        if (req.body.Fs == '8kHz') { // 20231218_AmiVoice_update_check_audio_format
           bitRate = 16;
           sampleRate = 8000;
         } else if (req.body.Fs == '16kHz') {
@@ -247,11 +248,12 @@ module.exports = (serverIndex, app, httpServer) => {
           isPCM: true,
           channels: 1,
           backgroundNoise: config.engine.backgroundNoise,
+          // 20231218_AmiVoice_add_be_and_audioFormat
           // bitRate: 16,
-          bitRate, // Ton // Item 2
-          bigendian, // Ton // Item 2
+          bitRate,
+          bigendian,
           sampleRate,
-          audioFormat: req.body.Fs, // Ton // Item 2
+          audioFormat: req.body.Fs,
         };
         session = new V1RtpSession(handshake);
         session.init(

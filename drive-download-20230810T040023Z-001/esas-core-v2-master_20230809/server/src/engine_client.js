@@ -5,7 +5,7 @@ const io = require('socket.io-client');
 const puppeteer = require('puppeteer');
 const fs = require('fs');
 const FormData = require('form-data');
-const { spawn } = require('child_process'); // Ton // Item 7
+const { spawn } = require('child_process'); // 20231218_AmiVoice_add_spawn
 
 const config = require('config');
 const lib = require('lib');
@@ -37,9 +37,10 @@ class EngineClient {
     this.handshake = handshake;
     this.emitter = emitter;
     this.bytes = 0;
-    this.buffer_store = []; // Ton // Item 4, 7
-    this.current_bytes = 0; // Ton // Item 4
-    this.buffer_size = 6615; // Ton // Item 4
+    // 20231218_AmiVoice_add_parameter_convert_and_store
+    this.buffer_store = []; 
+    this.current_bytes = 0; 
+    this.buffer_size = 6615; 
   }
 
   static async _login(currentPage) {
@@ -368,7 +369,7 @@ class EngineClient {
         this.logger.trace(`EngineClient.start() begin`);
         this.socket = await this._connect();
         this.bigendian = this.handshake.bigendian;
-        this.ffmpeg_c = await this._ffmpeg_child(this.handshake.audioFormat); // Ton // Item 7
+        this.ffmpeg_c = await this._ffmpeg_child(this.handshake.audioFormat); // 20231218_AmiVoice_call_ffmpeg
         await this._handshake(
           this.handshake.isPCM,
           this.handshake.channels,
@@ -414,7 +415,9 @@ class EngineClient {
         this.logger.trace(`EngineClient.close() begin`);
         // this.logger.trace(`EngineClient.close() emit zero(0) buffer`); 
         // this.sendBuffer(Buffer.alloc(0));
-        await this.sendZeroBuffer(); // Ton // Item 4
+        if (this.socket) {
+          await this.sendZeroBuffer(); // 20231218_AmiVoice_add_send_zero_buffer
+        }
         this.closing = true;
         if (this.socket) {
           if (!this.dataSent) {
@@ -439,7 +442,7 @@ class EngineClient {
             if (this.socket) {
               this.socket.disconnect();
               this.socket = null;
-              this.logger.trace(`EngineClient.socket.on analysis-report-ready end bytes: ${this.current_bytes}`); // Ton // Item 4 update parameter
+              this.logger.trace(`EngineClient.socket.on analysis-report-ready end bytes: ${this.current_bytes}`); // 20231218_AmiVoice_update_parameter
               resolve();
             }
           });
@@ -495,11 +498,11 @@ class EngineClient {
       }
       this.dataSent = true;
       this.bytes += buffer.length;
-
-      if (this.ffmpeg_c){ // Ton // Item 4, 7
-        this.ffmpeg_c.stdin.write(buffer) // Ton // Item 7
-        let current_buffer = this.calBufferSize(buffer) // Ton // Item 4
-        if (current_buffer) { // Ton // Item 4
+      // 20231218_AmiVoice_update_send_buffer_process
+      if (this.ffmpeg_c){
+        this.ffmpeg_c.stdin.write(buffer)
+        let current_buffer = this.calBufferSize(buffer)
+        if (current_buffer) {
           this.socket.emit('audio-stream', current_buffer);
           Redis.countEngine(current_buffer.length, 'Bytes#ENGINE.send', this.handshake.channels, this.handshake.backgroundNoise, this.handshake.bitRate, this.handshake.sampleRate);
         }
@@ -514,14 +517,14 @@ class EngineClient {
     }
   }
 
-  // Ton // Item 4
+  // 20231218_AmiVoice_method_send_zero_buffer
   sendZeroBuffer(){
     return new Promise( (resolve)=>{
       if (this.ffmpeg_c){ // send remain buffer
         this.ffmpeg_c.stdin.end();
         let tmp_buffer = Buffer.from(this.buffer_store)
         const time = Math.ceil((this.buffer_store.length - this.current_bytes)/this.buffer_size);
-        for (let i = 0; i < time; i++) { 
+        for (let i = 0; i < time; i++) {
           let buff = tmp_buffer.subarray(this.current_bytes, (this.current_bytes+this.buffer_size))
           this.current_bytes += buff.length
           this.socket.emit('audio-stream', buff);
@@ -535,7 +538,7 @@ class EngineClient {
     });
   }
 
-  // Ton // Item 4
+  // 20231218_AmiVoice_method_call_buffer
   calBufferSize(buffer){
     let tmp_buffer = Buffer.from(this.buffer_store)
     let buff = tmp_buffer.subarray(this.current_bytes, (this.current_bytes+this.buffer_size))
@@ -548,7 +551,7 @@ class EngineClient {
     }
   }
 
-  // Ton // Item 7
+  // 20231218_AmiVoice_method_get_ffmpeg_arg
   ffmpeg_arg(audioFormat){
     const br = this.handshake.bitRate
     const ch = this.handshake.channels
@@ -583,7 +586,7 @@ class EngineClient {
     return arg
   }
 
-  // Ton // Item 7
+  // 20231218_AmiVoice_method_ffmpeg
   _ffmpeg_child(audioFormat) {
     return new Promise((resolve, reject) => {
       const arg = this.ffmpeg_arg(audioFormat);

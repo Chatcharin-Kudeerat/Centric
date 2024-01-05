@@ -42,7 +42,7 @@ class V2SocketIoSession {
           sampleRate: context.sampleRate,
           outputType: 'json',
           bigendian: context.bigendian,
-          audioFormat: context.audioCodec, // Ton // Item 2
+          audioFormat: context.audioCodec, // 20231218_AmiVoice_add_param_audioFormat
         };
         this.engineClient = new EngineClient(this.logger, this.emitter, this.handshake);
         await this.engineClient.start();

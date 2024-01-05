@@ -168,7 +168,7 @@ class WebsocketServer {
             const audioFormat = matches[1];
             let sampleRate = null;
             let bigendian = false;
-            let bitRate = null; // Ton // Item 2
+            let bitRate = null; // 20231218_AmiVoice_add_parameter
             // if (audioFormat == 'lsb8k') {
             //   sampleRate = 8000;
             // } else if (audioFormat == 'msb8k') {
@@ -182,7 +182,7 @@ class WebsocketServer {
             // } else {
             //   throw new WebsocketServerError(`Invalid audioFormat ${audioFormat}`);
             // }
-            if (audioFormat == 'lsb8k') { // Ton // Item 2
+            if (audioFormat == 'lsb8k') { // 20231218_AmiVoice_update_check_audio_format
               bitRate = 16;
               sampleRate = 8000;
             } else if (audioFormat == 'msb8k') {
@@ -224,10 +224,10 @@ class WebsocketServer {
               channels: 1,
               backgroundNoise: config.engine.backgroundNoise,
               // bitRate: 16,
-              bitRate, // Ton // Item 2
+              bitRate, // 20231218_AmiVoice_add_param_bitRate
               sampleRate,
               bigendian,
-              audioFormat: audioFormat, // Ton // Item 2
+              audioFormat: audioFormat, // 20231218_AmiVoice_add_param_audioCodec
             };
             this.logger.trace(`WebsocketServer.socket.on() send s`);
             this.engineClient = new EngineClient(this.logger, this.emitter, this.handshake);
