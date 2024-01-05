@@ -19,7 +19,7 @@ def call_thread(number):
         x = threading.Thread(target=run_script)
         threads.append(x)
         x.start()
-        # time.sleep(1)
+        time.sleep(0.1)
 
     for index, thread in enumerate(threads):
         thread.join()
