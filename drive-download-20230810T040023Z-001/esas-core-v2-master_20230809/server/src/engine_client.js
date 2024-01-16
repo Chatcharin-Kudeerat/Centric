@@ -415,8 +415,6 @@ class EngineClient {
     return new Promise( async (resolve) => {
       try {
         this.logger.trace(`EngineClient.close() begin`);
-        // this.logger.trace(`EngineClient.close() emit zero(0) buffer`); 
-        // this.sendBuffer(Buffer.alloc(0));
         if (this.socket) {
           await this.sendZeroBuffer(); // 20231218_AmiVoice_add_send_zero_buffer
         }
@@ -449,7 +447,6 @@ class EngineClient {
             }
           });
           
-          //this.sendBuffer(Buffer.from(Array(32).fill(0))); // Send dummy
           this.socket.on('audio-analysis-completed', async (r) => {
               this.logger.trace(`EngineClient.socket.on() audio-analysis-complete`);
               if (r.success) {

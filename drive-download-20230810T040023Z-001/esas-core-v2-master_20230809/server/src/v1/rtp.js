@@ -58,6 +58,7 @@ class V1RtpSession {
                 const esasParam = lib.logic.buildEsasParam(engineParam, {
                   Segment: ++rtpServer.segmentIndex,
                   StartTime: moment(this.startAt).format('YYYY-MM-DD HH:mm:ss'),
+                  Channel: rtpServer.channel,
                 });
                 if (!(_.isObject(engineParam)) || (_.isObject(engineParam) && !(_.isNumber(engineParam.index) && _.isNumber(engineParam.channel)))){
                   this.logger.error(`V1RtpServer.analyzed error()`, 'code: 204, msg: Invalid Engine params');
@@ -253,7 +254,7 @@ module.exports = (serverIndex, app, httpServer) => {
           isPCM: true,
           channels: 1,
           backgroundNoise: config.engine.backgroundNoise,
-          // 20231218_AmiVoice_add_be_and_audioFormat
+          // 20231218_AmiVoice_add_bigendian_and_audioFormat
           // bitRate: 16,
           bitRate,
           bigendian,

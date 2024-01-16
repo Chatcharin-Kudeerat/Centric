@@ -41,7 +41,7 @@ REQUEST_PARAM = {
 
 # convert audio file to format of wav file and rate equal 8000 (~lsb8k)
 # [18122023] New update : convert audio file to 1 channels
-def ConvertAudioFile(fromFile, toFile, codecs):
+def ConvertAudioFile(fromFile, toFile, codecs = None):
     # command = "ffmpeg -i {} -acodec pcm_s16le -ar 8000 -ac 1 -vn {}".format(
     #     fromFile, toFile)
     # os.system(command)
@@ -174,7 +174,7 @@ def Stop(file):
 def run():
     global AUDIOFORMAT 
     host = '122.248.205.250' #'ec2-122-248-205-250.ap-southeast-1.compute.amazonaws.com'
-    fileName = './samples/2min_2ch_16000khz_8bit.wav'
+    fileName = './samples/49sec.wav'
     
     now = datetime.datetime.now().strftime("%Y%m%d%H%M%S%f")
     index = sys.argv[1] if len(sys.argv) > 1 else 1
@@ -185,6 +185,7 @@ def run():
     AUDIOFORMAT = SetAudioFormat(WAVE)
     codec = GetAudioData(WAVE)
     ConvertAudioFile(fileName, outputFile, codec)
+    # ConvertAudioFile(fileName, outputFile)
     ProcessData(outputFile)
 
 

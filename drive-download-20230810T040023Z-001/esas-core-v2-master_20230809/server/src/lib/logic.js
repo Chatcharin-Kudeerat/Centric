@@ -46,17 +46,17 @@ const ENGINE_PARAM_FIELDS = [
   // 'callPriorityAgent',
   // 'VOL1',
   // 'VOL2',
-  // 'SOS',
-  // 'AVJ',
-  // 'Fant',
-  // 'Fflic',
-  // 'Fmain',
-  // 'JQ',
-  // 'LJ',
-  // 'SPJ',
-  // 'SPT',
-  // 'intCHL'
-  // 'CoreType'
+  'SOS',
+  'AVJ',
+  'Fant',
+  'Fflic',
+  'Fmain',
+  'JQ',
+  'LJ',
+  'SPJ',
+  'SPT',
+  'intCHL',
+  'CoreType'
 ];
 
 const maxmin = (v, max, min) => {
