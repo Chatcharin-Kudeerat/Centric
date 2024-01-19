@@ -23,6 +23,9 @@ class SocketIoSession {
           resolve();
         });
       });
+      this.socket.on("analyzed", (data) => {
+        console.log(data);
+      });
       this.socket.on('disconnect', () => {
         this.disconnect();
       });

@@ -14,14 +14,13 @@ let wavPath = `${__dirname}/samples/${wavName}`
 let wav = new src.util["WaveFile"](fs.readFileSync(wavPath))
 let context = set_context()
 
-
-let socketSession = esasClientV2.startSocketIoSession()
 start_process()
 
 async function start_process(){
   try{
     print_info(context)
     let chunks = make_chunk(wav.toBuffer())
+    let socketSession = esasClientV2.startSocketIoSession()
     await socketSession.init(context)
     let i = 1
     for (const chunk of chunks) {
@@ -36,10 +35,6 @@ async function start_process(){
     console.log(e)
   }
 }
-
-socketSession.socket.on("analyzed", (data) => {
-  console.log(data);
-});
 
 function set_context(){
   let context = {"channels": wav.fmt["numChannels"], "bitRate": (wav.fmt["bitsPerSample"]), "sampleRate": wav.fmt["sampleRate"], "bigendian": false, "audioCodec": ''}
@@ -56,15 +51,13 @@ function set_context(){
 }
 
 function make_chunk(wav) {
-  let sum = 0;
   let chunks = []
-  let chunks_length = package_size
-  let chunk_time = wav.length/chunks_length
+  let chunks_length = package_size * context["channels"]
+  let chunk_time = Math.ceil(wav.length/chunks_length)
   for (let i = 0; i < chunk_time; i++) {
     let start = chunks_length*i
     let end = start+chunks_length
     let buff = wav.subarray(start, end)
-    sum += buff.length
     chunks.push(buff)
   }
   return chunks
