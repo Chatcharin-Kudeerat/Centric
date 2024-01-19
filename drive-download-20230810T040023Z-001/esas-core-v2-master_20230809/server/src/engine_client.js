@@ -521,10 +521,10 @@ class EngineClient {
     return new Promise( (resolve)=>{
       if (this.ffmpeg_c){ // send remain buffer
         this.ffmpeg_c.stdin.end();
-        let tmp_buffer = Buffer.from(this.buffer_store)
-        const time = Math.ceil((this.buffer_store.length - this.current_bytes)/this.buffer_size);
+        const time = Math.ceil(this.buffer_store.length/this.buffer_size);
         for (let i = 0; i < time; i++) {
-          let buff = tmp_buffer.subarray(this.current_bytes, (this.current_bytes+this.buffer_size))
+          let buff_slice = this.buffer_store.splice(0, this.buffer_size)
+          let buff = Buffer.from(buff_slice)
           this.current_bytes += buff.length
           this.socket.emit('audio-stream', buff);
           Redis.countEngine(buff.length, 'Bytes#ENGINE.send', this.handshake.channels, this.handshake.backgroundNoise, this.handshake.bitRate, this.handshake.sampleRate);
@@ -539,9 +539,9 @@ class EngineClient {
 
   // 20231218_AmiVoice_method_call_buffer
   calBufferSize(buffer){
-    let tmp_buffer = Buffer.from(this.buffer_store)
-    let buff = tmp_buffer.subarray(this.current_bytes, (this.current_bytes+this.buffer_size))
-    if ((tmp_buffer.length - this.current_bytes) > this.buffer_size ){
+    if (this.buffer_store.length > this.buffer_size ){
+      let buff_slice = this.buffer_store.splice(0, this.buffer_size)
+      let buff = Buffer.from(buff_slice)
       this.logger.trace(`EngineClient send data : ${buff.length}`);
       this.current_bytes += buff.length
       return buff
