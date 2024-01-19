@@ -9,7 +9,7 @@ const esasClientV2 = new src.v2(config); // EsasClientV2 //
 
 let delayTime = 50
 let package_size = 1280
-let wavName = argv[2] ? argv[2] : '20sec.wav';
+let wavName = argv[2] ? argv[2] : '30min.wav';
 let wavPath = `${__dirname}/samples/${wavName}`
 let wav = new src.util["WaveFile"](fs.readFileSync(wavPath))
 let context = set_context()
