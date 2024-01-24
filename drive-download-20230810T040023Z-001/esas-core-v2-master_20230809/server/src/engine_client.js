@@ -322,6 +322,7 @@ class EngineClient {
               }
 
               for (const channel in data.data.reports) {
+                if (!(/channel-/i.test(channel))){ continue; }
                 const channelData = data.data.reports[channel];
                 const mentalEffortEfficiency = _.get(channelData, 'profile.mentalEfficiency.mentalEffortEfficiency') || 0;
                 segments.push(lib.logic.buildEsasParam({
