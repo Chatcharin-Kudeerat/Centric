@@ -280,7 +280,9 @@ module.exports = (serverIndex, app, httpServer) => {
           RTPSize: 1280,
         };
         session.data.port0 = session.rtpServers[0].port;
+        session.rtpServers[0].channel = 0;
         session.data.port1 = session.rtpServers[1].port;
+        session.rtpServers[1].channel = 1;
         await sessionManager.setSessionRedis(session);
         if (withSession) {
           session.withSession = true;
