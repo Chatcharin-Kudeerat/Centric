@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   # root "articles#index"
   get "login", to: "login#index"
   post "login_authen", to: "login#login_authen"
+  post "logout", to: "login#logout"
   get "registration", to: "login#user_registration"
 
   root "dashboard#index"

@@ -12,7 +12,7 @@ class LoginController < ApplicationController
             destination = login_path(organization: organization, username: username)
             get_authen[organization].each do |h|
                 if h["username"] == username && h["password"] == password
-                    session["current_user"] = h["id"]
+                    session["current_user"] = h
                     destination = root_path()
                     break
                 end
@@ -22,6 +22,12 @@ class LoginController < ApplicationController
         else
             redirect_to login_path(organization: organization, username: username)
         end
+    end
+
+    def logout
+        session.delete "current_user"
+        # flash[:success] = "Log out successfully. BYE!"
+        redirect_to login_path()
     end
 
     def user_registration

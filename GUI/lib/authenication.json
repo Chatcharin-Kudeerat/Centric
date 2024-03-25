@@ -2,42 +2,58 @@
     "12345" : [{
         "id" : 1,
         "username" : "admin",
-        "password" : "password"
+        "password" : "password",
+        "firstname" : "Admin",
+        "role" : 1
     },
     {
         "id" : 2,
         "username" : "user admin",
-        "password" : "password"
+        "password" : "password",
+        "firstname" : "UserAdmin",
+        "role" : 2
     },
     {
         "id" : 3,
         "username" : "supervisor",
-        "password" : "password"
+        "password" : "password",
+        "firstname" : "Supervisor",
+        "role" : 3
     },
     {
         "id" : 4,
         "username" : "operator",
-        "password" : "password"
+        "password" : "password",
+        "firstname" : "Operator",
+        "role" : 4
     }],
 
     "6789" : [{
         "id" : 5,
         "username" : "admin",
-        "password" : "password"
+        "password" : "password",
+        "firstname" : "Admin2",
+        "role" : 1
     },
     {
         "id" : 6,
         "username" : "user admin",
-        "password" : "password"
+        "password" : "password",
+        "firstname" : "UserAdmin2",
+        "role" : 2
     },
     {
         "id" : 7,
         "username" : "supervisor",
-        "password" : "password"
+        "password" : "password",
+        "firstname" : "SV",
+        "role" : 3
     },
     {
         "id" : 8,
         "username" : "operator",
-        "password" : "password"
+        "password" : "password",
+        "firstname" : "OP",
+        "role" : 4
     }]
 }
