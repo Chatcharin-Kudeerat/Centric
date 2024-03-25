@@ -1,0 +1,38 @@
+<div class="bg-login"></div>
+<div class="text-center div-logo">
+  <%# <img src="/mnr_logo-removebg.png" class="rounded" alt="Logo" width="150" height="150"> %>
+</div>
+<div class="container text-center grid-login">
+  <div class="row">
+    <div class="col"></div>
+    <div class="col-6 div-login-box" >
+        <%= form_for :form_login, url: login_authen_path(format: :json), method: :POST do |f| %>
+            <div class="mb-3 row">
+                <label for="organization" class="form-label label-login">Organization ID: </label>
+                <%# <div class="col-sm-10"> %>
+                    <%= f.text_field :organization, value: params[:organization], class: "form-control input-login" %>
+                <%# </div> %>
+            </div>
+
+            <div class="mb-3 row">
+                <label for="username" class="form-label label-login">Username: </label>
+                <%# <div class="col-sm-10"> %>
+                    <%= f.text_field :username, value: params[:username], class: "form-control input-login" %>
+                <%# </div> %>
+            </div>
+            <div class="mb-3 row">
+                <label for="password" class="form-label label-login">Password: </label>
+                <%# <div class="col-sm-10"> %>
+                    <%= f.password_field :password, class: "form-control input-login" %>
+                <%# </div> %>
+            </div>
+
+            <div class="mb-3 form-text">
+                Do you have an account? Please <%= link_to "Sign up", registration_path() %>
+            </div>
+            <%= f.submit "Login", class: "btn btn-primary", id: "btn_login" %>
+        <% end %>
+    </div>
+    <div class="col"></div>
+  </div>
+</div>
