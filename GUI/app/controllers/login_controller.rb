@@ -31,5 +31,9 @@ class LoginController < ApplicationController
     end
 
     def user_registration
+        
+    end
+
+    def create_user
     end
 end
