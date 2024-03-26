@@ -14,24 +14,27 @@ class LoginController < ApplicationController
                 if h["username"] == username && h["password"] == password
                     session["current_user"] = h
                     destination = root_path()
+                    flash[:success] = "Login succussfully! Welcome #{h["firstname"]} to ESAS GUI"
                     break
                 end
             end
+            flash[:error] = "Login failed! username or password incorrect. Please try again later" if session["current_user"].blank?
             redirect_to destination
 
         else
+            flash[:error] = "Login failed! oranization ID not found. Please try again later"
             redirect_to login_path(organization: organization, username: username)
         end
     end
 
     def logout
         session.delete "current_user"
-        # flash[:success] = "Log out successfully. BYE!"
+        flash[:success] = "Log out successfully. BYE!"
         redirect_to login_path()
     end
 
     def user_registration
-        
+
     end
 
     def create_user

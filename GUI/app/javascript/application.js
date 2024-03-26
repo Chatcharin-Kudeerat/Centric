@@ -2,4 +2,6 @@
 import "@hotwired/turbo-rails"
 import "controllers"
 import "popper"
-import "bootstrap"    
+import "bootstrap"
+import "chartkick"
+import "Chart.bundle" 

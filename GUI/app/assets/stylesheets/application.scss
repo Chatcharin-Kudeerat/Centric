@@ -14,3 +14,80 @@
  *= require_self
  */
  @import "bootstrap"; 
+
+ body{ overflow: hidden; }
+ .alert{
+    z-index: 999;
+ }
+ .bg-login{
+    position: absolute;
+    z-index: -1;
+    overflow: hidden;
+ }
+
+ #div-btn-menu{
+    margin-bottom: 0px;
+    margin-right: 10px;
+ }
+ #btn-menu-icon{
+    padding: 5px 10px;
+    background-color: #F7FBFE;
+    color: #496BF1;
+    border: 1px solid #496BF1;
+ }
+ .nav-bg-body{
+    background: #496BF1;
+ }
+ .nav-link-top, .navbar-brand{
+    color: #F7FBFE;
+ }
+ #div-side-menu{
+    // z-index: 1;
+    position: absolute;
+    width: 300px;
+    height: -webkit-fill-available;
+    background: #E8F3F9;
+ }
+ .nav-link-side{
+    color: #343434;
+    padding: 20px;
+ }
+ .nav-link-side:hover{
+    background-color: #496BF1;
+    color: #F7FBFE;
+    padding: 20px;
+ }
+
+ .dropdown.logout{
+    position: absolute;
+    right: 10px;
+    cursor: pointer;
+ }
+ .div-alert{
+    margin-bottom: 0px !important;
+    position: absolute;
+    left: 0;
+    right: 0;
+ }
+ .btn-close-alert{
+    right: 10px;
+    position: absolute;
+ }
+ .btn-close-alert:active{
+    border: none;
+ }
+ #btn-logout{
+    cursor: pointer;
+    padding: 10px 10px;
+    color: #343434;
+    text-decoration: none;
+    display: list-item
+ }
+ #btn-logout:hover{
+    background-color: #496BF1;
+    color: #F7FBFE;
+ }
+ .div-body{
+    // margin-left: 300px;
+ }
+ 
