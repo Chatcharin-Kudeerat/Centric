@@ -1,52 +1,10 @@
-<style>
-  nav{ display: none !important }
-</style>
-
-<%# <div class="bg-login"></div> %>
 <div class="container text-center grid-login">
   <div class="row">
     <div class="col"></div>
-    <div class="col-6 div-login-box" >
-        <%= form_for :user, url: create_user_path(format: :json), method: :POST do |f| %>
-            <div class="mb-3 row">
-                <label for="organization" class="col-sm-3 col-form-label">Organization ID: </label>
-                <div class="col-sm-9">
-                    <%# <= f.text_field :organization, value: params[:organization], class: "form-control", required: true > %>
-                </div>
-            </div>
-            <div class="mb-3 row">
-                <label for="username" class="col-sm-3 col-form-label">Username: </label>
-                <div class="col-sm-9">
-                    <%= f.text_field :username, value: params[:username], class: "form-control", required: true %>
-                </div>
-            </div>
-            <div class="mb-3 row">
-                <label for="password" class="col-sm-3 col-form-label">Password: </label>
-                <div class="col-sm-9">
-                    <%= f.password_field :password, class: "form-control", required: true %>
-                </div>
-            </div>
-            <div class="mb-3 row">
-                <label for="firstname" class="col-sm-3 col-form-label">Firstname: </label>
-                <div class="col-sm-9">
-                    <%= f.text_field :firstname, value: params[:firstname], class: "form-control", required: true %>
-                </div>
-            </div>
-            <div class="mb-3 row">
-                <label for="lastname" class="col-sm-3 col-form-label">Lastname: </label>
-                <div class="col-sm-9">
-                    <%= f.text_field :lastname, value: params[:lastname], class: "form-control", required: true %>
-                </div>
-            </div>
-             <div class="mb-3 row">
-                <label for="role" class="col-sm-3 col-form-label">Role: </label>
-                <div class="col-sm-9">
-                    <%# <= f.text_field :role, value: params[:role], class: "form-control" > %>
-                </div>
-            </div>
-            <%= f.submit "Signup", class: "btn btn-primary", id: "btn_signup" %>
-            <%= link_to "Cancel", root_path(), class: "btn btn_cancel" %>
-        <% end %>
+    <div class="col-6 div-registration-box" data-controller="regis-form">
+        <%= render :partial => "create_form"%>
+        <%= render :partial => "upload_form"%>
+        <%# <%= render :partial => "upload_modal"%>
     </div>
     <div class="col"></div>
   </div>

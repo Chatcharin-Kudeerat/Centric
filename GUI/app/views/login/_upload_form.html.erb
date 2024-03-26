@@ -1,0 +1,28 @@
+<div id="div-upload-user" class="row shadow-sm collapse multi-collapse" data-regis-form-target="upload_form">
+    <div class="row justify-content-end">
+        <button type="button" id="btn-create-togle" class="btn rounded-pill" data-action="click->regis-form#toggle_form" title="Create user">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="20" fill="currentColor" class="bi bi-file-earmark-text" viewBox="0 0 16 16">
+                <path d="M5.5 7a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zM5 9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5m0 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5"/>
+                <path d="M9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.5zm0 1v2A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z"/>
+            </svg>
+        </button>
+    </div>
+    <%= form_for :regis_upload_form, url: upload_user_path(format: :json), method: :POST do |f| %>
+        <h3 class="header-registration"> Upload User </h3>
+        <div class="mb-3 row">
+            <label for="organization" class="col-sm-3 col-form-label text-end">Organization ID: </label>
+            <div class="col-sm-9">
+                <%= f.select :organization, options_for_select(@organizations, session["current_organization"]), {}, {class: "form-control form-select select_info_user is_input", id: "organization_upload_field", required: true, disabled: edit_organization?()} %>
+            </div>
+        </div>
+        <div class="my-3 row">
+            <label for="organization" class="col-sm-3 col-form-label text-end">File Upload: </label>
+            <div class="col-sm-9">
+                <%= f.file_field :import_data, direct: true, accept:"text/csv", required: true, id:"customFile", class:"mdl-textfield__input custom-file-input border w-100" %>
+                <%# <label class="custom-file-label" for="customFile">Choose file</label> %>
+            </div>
+        </div>
+        <%= f.submit "Upload", class: "btn btn-primary w-25", id: "btn_upload" %>
+        <%= link_to "Cancel", root_path(), class: "btn btn_cancel w-25 border" %>
+    <% end %>
+</div>

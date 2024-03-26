@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   post "logout", to: "login#logout"
   get "registration", to: "login#user_registration"
   post "create_user", to: "login#create_user"
+  post "upload_user", to: "login#upload_user"
 
   root "dashboard#index"
 end

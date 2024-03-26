@@ -15,3 +15,25 @@
     width: 97% !important;
     margin: auto;
 }
+.div-registration-box{
+    margin: auto;
+    background-color: rgba(255,255,255,.7);
+    // border: 1px solid #dee2e6;
+    border-radius: 10px;
+    padding: 20px;
+}
+#div-create-user, #div-upload-user {
+    background-color: rgba(255,255,255,.7);
+    border: 1px solid #dee2e6;
+    border-radius: 10px;
+    padding: 20px;
+
+    .header-registration{
+        margin-top: 25px;
+        margin-bottom: 45px;
+    }
+}
+
+#btn-upload-togle, #btn-create-togle{
+    width: 10%;
+}
