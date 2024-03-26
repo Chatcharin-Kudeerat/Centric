@@ -27,7 +27,7 @@
 
  #div-btn-menu{
     margin-bottom: 0px;
-    margin-right: 10px;
+    margin-left: 20px;
  }
  #btn-menu-icon{
     padding: 5px 10px;
@@ -56,6 +56,9 @@
     background-color: #496BF1;
     color: #F7FBFE;
     padding: 20px;
+ }
+ .nav-item.end{
+   margin: 0px 5px;
  }
 
  .dropdown.logout{

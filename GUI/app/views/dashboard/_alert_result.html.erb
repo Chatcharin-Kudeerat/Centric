@@ -1,0 +1,17 @@
+<span>Alert result</span>
+
+<div class="container" style="text-align:left;">
+    <% @alert.each do |al| %>
+    <div class="row">
+        <div class="col-4">
+            <span><%= al["call_start_time"]%></span>
+        </div>
+        <div class="col-3">
+            <span><%= al["op_name"]%></span>
+        </div>
+        <div class="col-5">
+            <span><%= al["remark"]%></span>
+        </div>
+    </div>
+    <% end %>
+</div>

@@ -1,27 +1,37 @@
 <% is_logged_in? %>
 
-<%= line_chart @graph.map { |g| {name: g["name"], data: g["data"]} } %>
+<div class="container grid-full" style="margin-top:20px;">
+    <div class="row">
+        <div class="col">
+            <div class="btn-group" role="group" aria-label="Basic radio toggle button group" style="margin-left:20px;">
+              <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked>
+              <label class="btn btn-outline-primary" for="btnradio1">Daily</label>
 
-<!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-  Launch static backdrop modal
-</button>
+              <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off">
+              <label class="btn btn-outline-primary" for="btnradio2">Monthly</label>
 
-<!-- Modal -->
-<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="staticBackdropLabel">Modal title</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        ...
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Understood</button>
-      </div>
+              <input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off">
+              <label class="btn btn-outline-primary" for="btnradio3">Date range</label>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container text-center grid-full" style="margin-top:10px;">
+    <div class="row">
+        <div class="col bg-block">
+            <%= render partial: "graph" %>
+        </div>
+    </div>
+</div>
+
+<div class="container text-center grid-full">
+  <div class="row">
+    <div class="col bg-block">
+        <%= render partial: "op_result" %>
+    </div>
+    <div class="col bg-block">
+        <%= render partial: "individual_sound_source" %>
     </div>
   </div>
 </div>
