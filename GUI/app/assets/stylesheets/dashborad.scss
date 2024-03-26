@@ -10,6 +10,16 @@
     max-height: 450px;
     overflow-y: auto;
 }
+#btn-date-daily, #btn-date-monthly, #btn-date-range{
+    color: #496BF1;
+    background-color: #F7FBFE;
+    border: 1px solid #496BF1;
+}
+.btn-check:checked+.btn{
+    color: #F7FBFE !important;
+    background-color: #496BF1 !important;
+    border: 1px solid #496BF1 !important;
+}
 .label-positions{
     font-size: 13px;
     display: block;
