@@ -9,6 +9,8 @@ Rails.application.routes.draw do
   get "registration", to: "login#user_registration"
   post "create_user", to: "login#create_user"
   post "upload_user", to: "login#upload_user"
+  get "audit_log", to: "audit_log#index"
+
 
   root "dashboard#index"
 end
