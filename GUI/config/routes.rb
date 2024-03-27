@@ -6,11 +6,12 @@ Rails.application.routes.draw do
   get "login", to: "login#index"
   post "login_authen", to: "login#login_authen"
   post "logout", to: "login#logout"
-  get "registration", to: "login#user_registration"
-  post "create_user", to: "login#create_user"
-  post "upload_user", to: "login#upload_user"
   get "audit_log", to: "audit_log#index"
 
+  get "user", to: "user#index"
+  # get "registration", to: "login#user_registration"
+  post "create_user", to: "user#create_user"
+  post "upload_user", to: "user#upload_user"
 
   root "dashboard#index"
 end

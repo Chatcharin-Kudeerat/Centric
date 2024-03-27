@@ -1,0 +1,60 @@
+<!-- Modal -->
+<div class="modal fade" id="addUser" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">Registration User</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div id="div-create-user" class="row border-0">
+            <%= form_for :regis_create_form, url: create_user_path(format: :json), method: :POST do |f| %>
+                <div class="mb-3 row">
+                    <label class="col-sm-3 col-form-label text-end">Organization ID: </label>
+                    <div class="col-sm-9">
+                        <%= f.select :organization, options_for_select(@organizations, session["current_organization"]), {}, {class: "form-control form-select select_info_user is_input", id: "organization_field", required: false, disabled: edit_organization?()} %>
+                    </div>
+                </div>
+                <div class="mb-3 row">
+                    <label for="username" class="col-sm-3 col-form-label text-end">User Name: </label>
+                    <div class="col-sm-9">
+                        <%= f.text_field :username, value: params[:username], class: "form-control", required: true %>
+                    </div>
+                </div>
+                <div class="mb-3 row">
+                    <label for="password" class="col-sm-3 col-form-label text-end">Password: </label>
+                    <div class="col-sm-9">
+                        <%= f.password_field :password, class: "form-control", required: true %>
+                    </div>
+                </div>
+                <div class="mb-3 row">
+                    <label for="firstname" class="col-sm-3 col-form-label text-end">First Name: </label>
+                    <div class="col-sm-9">
+                        <%= f.text_field :firstname, value: params[:firstname], class: "form-control", required: true %>
+                    </div>
+                </div>
+                <div class="mb-3 row">
+                    <label for="lastname" class="col-sm-3 col-form-label text-end">Last Name: </label>
+                    <div class="col-sm-9">
+                        <%= f.text_field :lastname, value: params[:lastname], class: "form-control", required: true %>
+                    </div>
+                </div>
+                <div class="mb-3 row">
+                    <label for="role" class="col-sm-3 col-form-label text-end">Role: </label>
+                    <div class="col-sm-9">
+                        <%= f.select :role, options_for_select(@role), {:include_blank => "-- Please Select Role--"}, {class: "form-select form-control select_info_user is_input", id: "user_role_field", required: true } %>
+                        <%# <%= f.text_field :role, value: params[:role], class: "form-control" %>
+                    </div>
+                </div>
+                <div class="mt-5 mb-3 row">
+                    <div class="col-sm-12 text-center">
+                        <%= f.submit "Submit", class: "btn w-25", id: "btn_signup" %>
+                        <button type="button" class="btn btn_cancel w-25 border" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
