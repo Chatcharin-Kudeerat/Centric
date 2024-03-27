@@ -106,10 +106,13 @@
  }
 
  .nav-item > button:hover{
-   color: black;
+   color: #343434;
  }
  .page-item > a{
    color: #496BF1;
+ }
+ .nav-item > .nav-alert > button:hover{
+   color: #343434;
  }
  .div-alert-message{
    width: 300px;
