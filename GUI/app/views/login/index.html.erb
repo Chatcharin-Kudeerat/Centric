@@ -30,6 +30,11 @@
                 <%# </div> %>
             </div>
 
+            <div class="mb-3 row" style="padding: 0px 100px;">
+                <div class="text-center"><img src="/captcha.png" style="margin-bottom: 10px; width: 100%;"/></div>
+                <label for="captcha" class="form-label label-login">Type the word above:</label>
+                <%= f.text_field :captcha, class: "form-control input-login" %>
+            </div>
             <%# <div class="mb-3 form-text">
                 Do you have an account? Please <= link_to "Sign up", registration_path() >
             </div> %>
