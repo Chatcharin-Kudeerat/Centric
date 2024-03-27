@@ -35,6 +35,10 @@
     color: #496BF1;
     border: 1px solid #496BF1;
  }
+ #btn-menu-icon:hover{
+   background: #E8F3F9;
+   color: black;
+ }
  .nav-bg-body{
     background: #496BF1;
  }
@@ -105,14 +109,11 @@
    border: solid 1px #496BF1;
  }
 
- .nav-item > button:hover{
+ .nav-item > button:hover, .nav-item > .nav-alert > button:hover{
    color: #343434;
  }
  .page-item > a{
    color: #496BF1;
- }
- .nav-item > .nav-alert > button:hover{
-   color: #343434;
  }
  .div-alert-message{
    width: 300px;
