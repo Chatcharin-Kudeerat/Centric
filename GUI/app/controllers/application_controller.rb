@@ -5,7 +5,6 @@ class ApplicationController < ActionController::Base
     def is_logged_in?
         if session["current_user"].blank?
             redirect_to login_path()
-            return
-        end 
+        end
     end
 end

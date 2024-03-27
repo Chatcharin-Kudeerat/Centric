@@ -1,4 +1,6 @@
 class UserController < ApplicationController
+    before_action :is_logged_in?
+    
     def index
         @role = [["User Admin", 2], ["Suppervisor", 3], ["Operator", 4]]
         data = JSON.parse(open("./lib/authenication.json").read)
