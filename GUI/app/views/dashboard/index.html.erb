@@ -17,7 +17,7 @@
     </div>
 </div>
 
-<% if session["current_user"]["role"] == 1 || session["current_user"]["role"] == 2 %>
+<%# <% if session["current_user"]["role"] == 1 || session["current_user"]["role"] == 2 %> %>
   <div class="container text-center grid-full">
       <div class="row">
           <div class="col bg-block">
@@ -25,31 +25,31 @@
           </div>
       </div>
   </div>
-<% end %>
+<%# <% end %> %>
 
 <div class="container text-center grid-full">
   <div class="row">
-    <% if session["current_user"]["role"] == 1 || session["current_user"]["role"] == 2 %>
+    <%# <% if session["current_user"]["role"] == 1 || session["current_user"]["role"] == 2 %> %>
       <div class="col bg-block">
         <%= render partial: "op_result" %>
       </div>
       <div class="col bg-block">
         <%= render partial: "individual_sound_source" %>
       </div>
-    <% elsif session["current_user"]["role"] == 3 %>
+    <%# <% elsif session["current_user"]["role"] == 3 %> %>
       <div class="col bg-block sv">
         <%= render partial: "op_result_sv" %>
       </div>
       <div class="col bg-block sv">
         <%= render partial: "individual_sound_source_sv" %>
       </div>
-    <% else %>
+    <%# <% else %> %>
       <div class="col bg-block sv">
         <%= render partial: "op_result_op" %>
       </div>
       <div class="col bg-block sv">
         <%= render partial: "individual_sound_source_op" %>
       </div>
-    <% end %>
+    <%# <% end %> %>
   </div>
 </div>
