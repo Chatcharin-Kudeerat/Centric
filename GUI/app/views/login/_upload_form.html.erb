@@ -18,11 +18,18 @@
         <div class="my-3 row">
             <label for="organization" class="col-sm-3 col-form-label text-end">File Upload: </label>
             <div class="col-sm-9">
-                <%= f.file_field :import_data, direct: true, accept:"text/csv", required: true, id:"customFile", class:"mdl-textfield__input custom-file-input border w-100" %>
+                <div class="input-group">
+                    <%= f.file_field :import_data, direct: true, accept:"text/csv", required: true, id:"customFile", class:"form-control mdl-textfield__input custom-file-input border w-100", aria_describedby:"inputGroupFileAddon04", aria_label:"Upload" %>
+                </div>
+                <%# <%= f.file_field :import_data, direct: true, accept:"text/csv", required: true, id:"customFile", class:"mdl-textfield__input custom-file-input border w-100" %>
                 <%# <label class="custom-file-label" for="customFile">Choose file</label> %>
             </div>
         </div>
-        <%= f.submit "Upload", class: "btn btn-primary w-25", id: "btn_upload" %>
-        <%= link_to "Cancel", root_path(), class: "btn btn_cancel w-25 border" %>
+        <div class="mt-5 mb-3 row">
+            <div class="col-sm-12">
+                <%= f.submit "Upload", class: "btn btn-primary w-25", id: "btn_upload" %>
+                <%= link_to "Cancel", root_path(), class: "btn btn_cancel w-25 border" %>
+            </div>
+        </div>
     <% end %>
 </div>
