@@ -8,7 +8,7 @@
 <div class="container text-center grid-login">
   <div class="row">
     <div class="col"></div>
-    <div class="col-6 div-login-box" >
+    <div class="col-5 div-login-box p-5" >
         <%= form_for :form_login, url: login_authen_path(format: :json), method: :POST do |f| %>
             <div class="mb-3 row">
                 <label for="organization" class="form-label label-login">Organization ID: </label>
@@ -33,7 +33,7 @@
             <%# <div class="mb-3 form-text">
                 Do you have an account? Please <= link_to "Sign up", registration_path() >
             </div> %>
-            <%= f.submit "Login", class: "btn btn-primary", id: "btn_login" %>
+            <%= f.submit "Login", class: "btn btn-primary w-25", id: "btn_login" %>
         <% end %>
     </div>
     <div class="col"></div>

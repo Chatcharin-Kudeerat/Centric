@@ -9,7 +9,7 @@ Rails.application.routes.draw do
   get "audit_log", to: "audit_log#index"
 
   get "user", to: "user#index"
-  # get "registration", to: "login#user_registration"
+  # get "registration", to: "user#index"
   post "create_user", to: "user#create_user"
   post "upload_user", to: "user#upload_user"
 

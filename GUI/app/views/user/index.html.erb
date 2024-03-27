@@ -13,17 +13,12 @@
                 <div class="col-auto">
                     <label for="staticOrganization" class="col-form-label">Organization ID.</label>
                 </div>
-                <div class="col-auto">
-                    <select class="form-select" aria-label="Default select example" id="staticOrganization">
-                        <option selected>Open this select menu</option>
-                        <option value="1">One</option>
-                        <option value="2">Two</option>
-                        <option value="3">Three</option>
-                    </select>
+                <div class="col-auto" style="width: 200px;">
+                    <%= select("post", "person_id", @organizations, { include_blank: true, selected: session["current_organization"] }, {id:"staticOrganization", class: "form-select", aria_label:"Default select example", disabled: edit_organization?() }) %>
                 </div>
             </div>
         </div>
-        <div class="col-6"></div>
+        <%# <div class="col-6"></div> %>
         <div class="col text-end">
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUser">
                 Add user
